@@ -1,0 +1,35 @@
+RGB_LIB_DISTRIBUTION=matrix
+RGB_INCDIR=$(RGB_LIB_DISTRIBUTION)/include
+RGB_LIBDIR=$(RGB_LIB_DISTRIBUTION)/lib
+RGB_LIBRARY_NAME=rgbmatrix
+RGB_LIBRARY=$(RGB_LIBDIR)/lib$(RGB_LIBRARY_NAME).a
+
+MONGOOSE_LIB_DISTRIBUTION=mongoose
+MONGOOSE_INCDIR=$(MONGOOSE_LIB_DISTRIBUTION)
+MONGOOSE_OBJECTS=mongoose.o
+MONGOOSE_SRC=$(MONGOOSE_LIB_DISTRIBUTION)/mongoose.c
+
+LDFLAGS+=-L$(RGB_LIBDIR) -l$(RGB_LIBRARY_NAME) -lrt -lm -lpthread -lstdc++
+CXXFLAGS=-Wall -O3 -g
+OBJECTS=main.o Alarm.o ScrollingTextGenerator.o VolumeBars.o ListUI.o MyThreadedCanvasManipulator.o
+
+all: postled
+
+$(MONGOOSE_OBJECTS):
+	$(CXX) -I$(MONGOOSE_INCDIR) $(CXXFLAGS)  -c $(MONGOOSE_SRC)
+
+$(RGB_LIBRARY):
+	$(MAKE) -C $(RGB_LIBDIR)
+
+%.o : %.cpp
+	$(CXX) -I$(RGB_INCDIR) -I$(MONGOOSE_INCDIR) $(CXXFLAGS) -c -o $@ $<
+
+postled : $(OBJECTS) $(RGB_LIBRARY) $(MONGOOSE_OBJECTS)
+	$(CXX) $(CXXFLAGS) $(OBJECTS) $(MONGOOSE_OBJECTS) -o $@ $(LDFLAGS)
+
+clean:
+	rm -f $(OBJECTS) postled
+	rm -f $(MONGOOSE_OBJECTS)
+	$(MAKE) -C $(RGB_LIBDIR) clean
+	$(MAKE) -C $(PP_LIBDIR) clean
+
