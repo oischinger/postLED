@@ -1,6 +1,6 @@
 {
   "name": "PostLED",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "slug": "postled",
   "description": "PostLED LED Matrix",
   "arch": ["armhf", "armv7", "aarch64", "amd64", "i386"],
