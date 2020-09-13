@@ -16,7 +16,6 @@
 #include "ListUI.h"
 #include "Alarm.h"
 
-using rgb_matrix::GPIO;
 using rgb_matrix::RGBMatrix;
 using rgb_matrix::Canvas;
 

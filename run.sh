@@ -12,6 +12,7 @@ rmmod bcm2835_v4l2
 rmmod bcm2835_codec
 setcap 'cap_sys_nice=eip' postled
 echo Starting PostLED
+cd /usr/src/postled
 ./postled -h $HOST -u $USERNAME -p $PASSWORD --led-rows=16 --led-cols=32
 echo PostLED terminated
 
