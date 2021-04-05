@@ -10,7 +10,7 @@ RUN apk add --no-cache mosquitto && \
 WORKDIR /usr/src/postled
 RUN git clone https://github.com/hzeller/rpi-rgb-led-matrix.git  && \
     mv rpi-rgb-led-matrix matrix  && \
-    git clone https://github.com/cesanta/mongoose.git
+    git clone -b 6.18 https://github.com/cesanta/mongoose.git
 RUN make 
 
 
