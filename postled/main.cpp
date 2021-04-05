@@ -11,6 +11,7 @@
 
 #include "mongoose/mongoose.h"
 
+#include "StaticTextGenerator.h"
 #include "ScrollingTextGenerator.h"
 #include "VolumeBars.h"
 #include "ListUI.h"
@@ -26,6 +27,7 @@ static const char *s_topic = "/postled/#";
 static struct mg_mqtt_topic_expression s_topic_expr = {nullptr, 0};
 
 static ScrollingTextGenerator* s_pTextScrollGenerator;
+static StaticTextGenerator* s_pTextStaticGenerator;
 static VolumeBars* s_pVolumeBars;
 static ListUI* s_pListUi;
 static Alarm* s_pAlarm;
@@ -91,6 +93,8 @@ static void ev_handler(struct mg_connection *nc, int ev, void *p) {
       
       if (s_pTextScrollGenerator->isRunning() && (strcmp("/postled/mediaplayer/volume", strTopic) == 0))
           sbTextScrollGeneratorInterrupted = true;
+      s_pTextStaticGenerator->Stop();
+      s_pTextStaticGenerator->WaitStopped();
       s_pTextScrollGenerator->Stop();
       s_pTextScrollGenerator->WaitStopped();
       s_pVolumeBars->Stop();
@@ -128,6 +132,11 @@ static void ev_handler(struct mg_connection *nc, int ev, void *p) {
           s_pTextScrollGenerator->setMusic(false);
           s_pTextScrollGenerator->setLoops(30);
           s_pTextScrollGenerator->Start();
+      }
+      else if (strcmp("/postled/statictext", strTopic) == 0)
+      {
+          s_pTextStaticGenerator->setText(strPayload);
+          s_pTextStaticGenerator->Start();
       }
       fflush(stdout);
 #endif
@@ -184,6 +193,7 @@ int main(int argc, char *argv[]) {
   RGBMatrix *matrix = rgb_matrix::CreateMatrixFromOptions(matrix_options,
                                                           runtime_opt);
   s_pTextScrollGenerator = new ScrollingTextGenerator(matrix);
+  s_pTextStaticGenerator = new StaticTextGenerator(matrix);
   s_pVolumeBars = new VolumeBars(matrix);
   s_pListUi = new ListUI(matrix);
   s_pAlarm = new Alarm(matrix); 
@@ -209,6 +219,7 @@ int main(int argc, char *argv[]) {
     if (interrupt_received)
     {
       s_pTextScrollGenerator->Stop();
+      s_pTextStaticGenerator->Stop();
       s_pVolumeBars->Stop();
       s_pListUi->Stop();
       s_pAlarm->Stop();

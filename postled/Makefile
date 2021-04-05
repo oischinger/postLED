@@ -11,7 +11,7 @@ MONGOOSE_SRC=$(MONGOOSE_LIB_DISTRIBUTION)/mongoose.c
 
 LDFLAGS+=-L$(RGB_LIBDIR) -l$(RGB_LIBRARY_NAME) -lrt -lm -lpthread -lstdc++
 CXXFLAGS=-Wall -O3 -g
-OBJECTS=main.o Alarm.o ScrollingTextGenerator.o VolumeBars.o ListUI.o MyThreadedCanvasManipulator.o
+OBJECTS=main.o Alarm.o StaticTextGenerator.o ScrollingTextGenerator.o VolumeBars.o ListUI.o MyThreadedCanvasManipulator.o
 
 all: postled
 
